@@ -1,27 +1,29 @@
-import sys
+# TODO FIRST:
 
+# Detect face
+# Extract face
+# Average the image
+# Compare with the images in the database
+
+
+# TODO SECOND:
+
+# Segment the extracted face by 10px x 10px
+# Get average of every segment and store the values
+# Compare these values with every averaged face in the database
+# Print the closest found one.
+
+import sys
 # import the necessary things for OpenCV
 from opencv import cv
 from opencv import highgui
 from opencv.cv import *
 from opencv.highgui import *
 
-import pygame
-from pygame.locals import *
-import Numeric
-import random
 
-Fs=44100 # sample rate
-pygame.mixer.init(Fs, -16,1)   # mono, 16-bit
-
-def drawRectangle(faces, image):
-    if faces:
-        for face in faces:
-            cvRectangle(image, cvPoint( int(face.x), int(face.y)), cvPoint(int(face.x+face.width)-30, int(face.y+face.height)-30), CV_RGB(0,255,0), 3, 8, 0)
-            note(int(face.x/10)*6.0+200, 20.0)
-#            print face.x + face.y + face.width + face.height
 
 def detectFace(image):
+
     grayscale = cvCreateImage(cvSize(640, 480), 8, 1)
     cvCvtColor(image, grayscale, CV_BGR2GRAY)
     storage = cvCreateMemStorage(0)
@@ -31,20 +33,23 @@ def detectFace(image):
     faces = cvHaarDetectObjects(grayscale, cascade, storage, 1.1, 2, CV_HAAR_DO_CANNY_PRUNING, cvSize(100,100))
     drawRectangle(faces, image)
 
-def note(freq, amp):
-    length = Fs * 0.2
-    tmp = []
-    for t in range(int(length)):
-            v= amp * Numeric.sin(t*freq/Fs*2*Numeric.pi)
-            tmp.append(v)
-    pygame.sndarray.make_sound(Numeric.array(tmp,Numeric.Int0)).play()
+
+
+def drawRectangle(faces, image):
+
+    if faces:
+        for face in faces:
+            cvRectangle(image, cvPoint( int(face.x), int(face.y)), cvPoint(int(face.x+face.width)-30, int(face.y+face.height)-30), CV_RGB(0,255,0), 3, 8, 0)
+
+
 
 def main():
 
     print "FaceIn! an OpenCV Python Face Recognition Program"
+    
     highgui.cvNamedWindow ('Camera', highgui.CV_WINDOW_AUTOSIZE)
     highgui.cvMoveWindow ('Camera', 10, 10)
-    device = -1
+    device = 0 #use first device found
     capture = highgui.cvCreateCameraCapture (device)
     frame = highgui.cvQueryFrame (capture)
     frame_size = cv.cvGetSize (frame)
@@ -66,4 +71,4 @@ def main():
             quit()
         
 if __name__ == "__main__":
-  main()
+    main()
