@@ -1,0 +1,1 @@
+This project aims to log users in to their Linux OS with face recognition.
